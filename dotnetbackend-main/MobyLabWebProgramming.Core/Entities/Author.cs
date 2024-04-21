@@ -9,9 +9,9 @@ namespace MobyLabWebProgramming.Core.Entities;
 public class Author : BaseEntity
 {
     public string Name { get; set; } = default!;
-    public string Surname { get; set; } = default!;
-    public DateTime BirthDate { get; set; }
     public string Nationality { get; set; } = default!;
     public string Biography { get; set; } = default!;
-  //  public ICollection<Book> Books { get; set; } = new List<Book>();
+
+    // one-to-many relation between author and book
+    public ICollection<Book>? Books { get; set; } = new List<Book>();
 }

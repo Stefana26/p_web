@@ -15,7 +15,6 @@ public class AuthorProjectionSpec : BaseSpec<AuthorProjectionSpec, Author, Autho
     {
         Id = e.Id,
         Name = e.Name,
-        Surname = e.Surname,
         Biography = e.Biography
     };
 

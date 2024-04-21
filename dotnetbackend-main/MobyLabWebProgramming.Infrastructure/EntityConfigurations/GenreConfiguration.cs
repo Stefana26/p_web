@@ -15,14 +15,12 @@ public class GenreConfiguration : IEntityTypeConfiguration<Genre>
             .HasMaxLength(255)
             .IsRequired();
         builder.Property(e => e.Description)
-            .HasMaxLength(255)
+            .HasMaxLength(4095)
             .IsRequired();
-        //builder.HasMany(e => e.Books)
-        //    .WithOne(e => e.Genre)
-        //    .HasForeignKey(e => e.GenreId);
         builder.Property(e => e.CreatedAt)
             .IsRequired();
         builder.Property(e => e.UpdatedAt)
             .IsRequired();
+
     }
 }

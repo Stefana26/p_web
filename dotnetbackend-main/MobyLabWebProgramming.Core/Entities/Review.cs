@@ -10,9 +10,12 @@ public class Review : BaseEntity
 {
     public string Title { get; set; } = default!;
     public string Content { get; set; } = default!;
-    public int Rating { get; set; }
+
+    // many-to-one relation between review and book
     public Guid BookId { get; set; }
     public Book Book { get; set; } = default!;
+
+    // many-to-one relation between review and user
     public Guid UserId { get; set; }
     public User User { get; set; } = default!;
 }

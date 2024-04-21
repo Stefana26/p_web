@@ -14,11 +14,8 @@ public class BookConfiguration : IEntityTypeConfiguration<Book>
         builder.Property(e => e.Title)
             .HasMaxLength(255) // This specifies the maximum length for varchar type in the database.
             .IsRequired();
-        builder.Property(e => e.Author)
-            .HasMaxLength(255)
-            .IsRequired();
         builder.Property(e => e.Description)
-            .HasMaxLength(255)
+            .HasMaxLength(4095)
             .IsRequired();
         builder.Property(e => e.Pages)
             .IsRequired();
@@ -26,5 +23,21 @@ public class BookConfiguration : IEntityTypeConfiguration<Book>
             .IsRequired();
         builder.Property(e => e.UpdatedAt)
             .IsRequired();
+
+        //// many-to-one relation between book and author
+        builder.HasOne(e => e.Author) // This specifies a one-to-many relation.
+            .WithMany(e => e.Books) // This provides the reverse mapping for the one-to-many relation. 
+            .HasForeignKey(e => e.AuthorId) // Here the foreign key column is specified.
+            .HasPrincipalKey(e => e.Id) // This specifies the referenced key in the referenced table.
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade);
+
+        // many-to-one relation between book and genre
+        builder.HasOne(e => e.Genre) // This specifies a one-to-many relation.
+            .WithMany(e => e.Books) // This provides the reverse mapping for the one-to-many relation. 
+            .HasForeignKey(e => e.GenreId) // Here the foreign key column is specified.
+            .HasPrincipalKey(e => e.Id) // This specifies the referenced key in the referenced table.
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

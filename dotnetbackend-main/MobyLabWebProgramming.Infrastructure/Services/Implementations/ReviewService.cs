@@ -52,7 +52,6 @@ namespace MobyLabWebProgramming.Infrastructure.Services.Implementations
             {
                 Title = review.Title,
                 Content = review.Content,
-                Rating = review.Rating,
                 //BookId = review.BookId,
                // UserId = review.UserId
             }, cancellationToken); // A new entity is created and persisted in the database.
@@ -73,7 +72,6 @@ namespace MobyLabWebProgramming.Infrastructure.Services.Implementations
             {
                 entity.Title = review.Title ?? entity.Title;
                 entity.Content = review.Content ?? entity.Content;
-                entity.Rating = review.Rating ?? entity.Rating;
 
                 await _repository.UpdateAsync(entity, cancellationToken); // Update the entity and persist the changes.
             }

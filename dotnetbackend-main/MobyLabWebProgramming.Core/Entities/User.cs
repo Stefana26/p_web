@@ -18,4 +18,8 @@ public class User : BaseEntity
     /// Note that this field will be null if not explicitly requested via a Include query, also note that the property is used by the ORM, in the database this collection doesn't exist. 
     /// </summary>
     public ICollection<UserFile> UserFiles { get; set; } = default!;
+    // one-to-many relation between user and review
+    public ICollection<Review>? Reviews { get; set; }
+    // one-to-many relation between user and rating
+    public ICollection<Rating>? Ratings { get; set; }
 }

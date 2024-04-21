@@ -15,7 +15,6 @@ namespace MobyLabWebProgramming.Core.Specifications
         {
             Title = e.Title,
             Content = e.Content,
-            Rating = e.Rating,
             BookId = e.BookId,
             UserId = e.UserId
         };

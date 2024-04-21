@@ -15,7 +15,6 @@ public class BookProjectionSpec : BaseSpec<BookProjectionSpec, Book, BookDTO>
     {
         Id = e.Id,
         Title = e.Title,
-        Author = e.Author,
         Description = e.Description,
         Pages = e.Pages
     };

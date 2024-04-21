@@ -10,9 +10,9 @@ namespace MobyLabWebProgramming.Core.Entities
     {
         public string Name { get; set; } = default!;
         public string Description { get; set; } = default!;
-        // Foreign key for the Book entity.
-        public Guid? BookId { get; set; }
-        public List<Book> Books { get; set; } = new List<Book>();
+
+        // one-to-many relation between genre and book
+        public ICollection<Book>? Books { get; set; } = new List<Book>();
 
     }
 }

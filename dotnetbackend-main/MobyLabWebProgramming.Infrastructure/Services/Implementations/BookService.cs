@@ -52,7 +52,6 @@ public class BookService : IBookService
         await _repository.AddAsync(new Book
         {
             Title = book.Title,
-            Author = book.Author,
             Description = book.Description,
             Pages = book.Pages
         }, cancellationToken); // A new entity is created and persisted in the database.
@@ -72,7 +71,6 @@ public class BookService : IBookService
         if (entity != null) // Verify if the book is not found, you cannot update an non-existing entity.
         {
             entity.Title = book.Title ?? entity.Title;
-            entity.Author = book.Author ?? entity.Author;
             entity.Description = book.Description ?? entity.Description;
             entity.Pages = book.Pages ?? entity.Pages;
 

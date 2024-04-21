@@ -50,7 +50,6 @@ public class AuthorService : IAuthorService
         await _repository.AddAsync(new Author
         {
             Name = author.Name,
-            Surname = author.Surname,
             Biography = author.Biography,
         }, cancellationToken); // A new entity is created and persisted in the database.
 
@@ -69,7 +68,6 @@ public class AuthorService : IAuthorService
         if (entity != null) // Verify if the book is not found, you cannot update an non-existing entity.
         {
             entity.Name = author.Name ?? entity.Name;
-            entity.Surname = author.Surname ?? entity.Surname;
             entity.Biography = author.Biography ?? entity.Biography;
 
             await _repository.UpdateAsync(entity, cancellationToken); // Update the entity and persist the changes.
