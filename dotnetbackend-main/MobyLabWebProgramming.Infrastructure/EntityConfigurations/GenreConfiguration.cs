@@ -1,12 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using MobyLabWebProgramming.Core.Entities;
 
-namespace MobyLabWebProgramming.Infrastructure.EntityConfigurations
+namespace MobyLabWebProgramming.Infrastructure.EntityConfigurations;
+
+public class GenreConfiguration : IEntityTypeConfiguration<Genre>
 {
-    internal class GenreConfiguration
+    public void Configure(EntityTypeBuilder<Genre> builder)
     {
+        builder.Property(e => e.Id) // This specifies which property is configured.
+            .IsRequired(); // Here it is specified if the property is required, meaning it cannot be null in the database.
+        builder.HasKey(x => x.Id); // Here it is specifies that the property Id is the primary key.
+        builder.Property(e => e.Name)
+            .HasMaxLength(255)
+            .IsRequired();
+        builder.Property(e => e.Description)
+            .HasMaxLength(255)
+            .IsRequired();
+        //builder.HasMany(e => e.Books)
+        //    .WithOne(e => e.Genre)
+        //    .HasForeignKey(e => e.GenreId);
+        builder.Property(e => e.CreatedAt)
+            .IsRequired();
+        builder.Property(e => e.UpdatedAt)
+            .IsRequired();
     }
 }
