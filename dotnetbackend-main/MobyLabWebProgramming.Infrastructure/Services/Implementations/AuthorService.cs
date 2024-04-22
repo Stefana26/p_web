@@ -50,7 +50,8 @@ public class AuthorService : IAuthorService
         await _repository.AddAsync(new Author
         {
             Name = author.Name,
-            Biography = author.Biography,
+            Nationality = author.Nationality ?? null,
+            Biography = author.Biography ?? null,
         }, cancellationToken); // A new entity is created and persisted in the database.
 
         return ServiceResponse.ForSuccess();
@@ -71,6 +72,9 @@ public class AuthorService : IAuthorService
             entity.Biography = author.Biography ?? entity.Biography;
 
             await _repository.UpdateAsync(entity, cancellationToken); // Update the entity and persist the changes.
+        } else
+        {
+            return ServiceResponse<BookDTO>.FromError(CommonErrors.UserNotFound);
         }
 
         return ServiceResponse.ForSuccess();

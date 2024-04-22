@@ -6,4 +6,8 @@ using System.Threading.Tasks;
 
 namespace MobyLabWebProgramming.Core.DataTransferObjects;
 
-public record class RatingUpdateDTO(Guid Id, int? Value);
+public class ReviewEssential
+{
+    public Guid UserId { get; set; }
+    public string Comment { get; set; }
+}

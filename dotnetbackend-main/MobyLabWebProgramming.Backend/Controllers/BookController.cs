@@ -32,6 +32,17 @@ namespace MobyLabWebProgramming.Backend.Controllers
                 this.ErrorMessageResult<BookDTO>(currentUser.Error);
         }
 
+        [Authorize] // You need to use this attribute to protect the route access, it will return a Forbidden status code if the JWT is not present or invalid, and also it will decode the JWT token.
+        [HttpGet] // This attribute will make the controller respond to a HTTP GET request on the route /api/User/GetById/<some_guid>.
+        public async Task<ActionResult<RequestResponse<List<BookDTO>>>> GetAllTheBooks() // The FromRoute attribute will bind the id from the route to this parameter.
+        {
+            var currentUser = await GetCurrentUser();
+
+            return currentUser.Result != null ?
+                this.FromServiceResponse(await _bookService.GetBooks()) :
+                this.ErrorMessageResult<List<BookDTO>>(currentUser.Error);
+        }
+
         [Authorize]
         [HttpPost]
         public async Task<ActionResult<RequestResponse>> Add([FromBody] BookAddDTO body)

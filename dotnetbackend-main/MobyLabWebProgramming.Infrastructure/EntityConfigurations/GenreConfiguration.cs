@@ -15,8 +15,7 @@ public class GenreConfiguration : IEntityTypeConfiguration<Genre>
             .HasMaxLength(255)
             .IsRequired();
         builder.Property(e => e.Description)
-            .HasMaxLength(4095)
-            .IsRequired();
+            .HasMaxLength(4095);
         builder.Property(e => e.CreatedAt)
             .IsRequired();
         builder.Property(e => e.UpdatedAt)

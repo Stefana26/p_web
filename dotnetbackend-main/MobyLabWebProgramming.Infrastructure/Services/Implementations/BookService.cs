@@ -21,9 +21,15 @@ namespace MobyLabWebProgramming.Infrastructure.Services.Implementations;
 public class BookService : IBookService
 {
     private readonly IRepository<WebAppDatabaseContext> _repository;
-    public BookService(IRepository<WebAppDatabaseContext> repository)
+    private readonly IAuthorService _authorService;
+    private readonly IGenreService _genreService;
+    public BookService(IRepository<WebAppDatabaseContext> repository, 
+        IAuthorService authorService, 
+        IGenreService genreService)
     {
         _repository = repository;
+        _authorService = authorService;
+        _genreService = genreService;
     }
 
     public async Task<ServiceResponse<BookDTO>> GetBook(Guid id, CancellationToken cancellationToken = default)
@@ -33,6 +39,16 @@ public class BookService : IBookService
         return result != null ?
             ServiceResponse<BookDTO>.ForSuccess(result) :
             ServiceResponse<BookDTO>.FromError(CommonErrors.UserNotFound); // Pack the result or error into a ServiceResponse.
+    }
+
+    public async Task<ServiceResponse<List<BookDTO>>> GetBooks(CancellationToken cancellationToken = default)
+    {
+        var result = await _repository.ListAsync(new BookProjectionSpec(Guid.Empty), cancellationToken); // Get a user using a specification on the repository.
+
+        List<BookDTO> bookDTOs = result.ToList();
+        return result != null ?
+            ServiceResponse<List<BookDTO>>.ForSuccess(bookDTOs) :
+            ServiceResponse<List<BookDTO>>.FromError(CommonErrors.UserNotFound); // Pack the result or error into a ServiceResponse.
     }
 
     public async Task<ServiceResponse> AddBook(BookAddDTO book, UserDTO? requestingUser, CancellationToken cancellationToken = default)
@@ -49,11 +65,43 @@ public class BookService : IBookService
             return ServiceResponse.FromError(new(HttpStatusCode.Conflict, "The book already exists!", ErrorCodes.UserAlreadyExists));
         }
 
+
+        // check the status of author
+        var author = await _repository.GetAsync(new AuthorSpec(book.Author), cancellationToken);
+
+        if (author == null)
+        {
+            var authorName = new AuthorAddDTO
+            {
+                Name = book.Author
+            };
+            var authorResult = await _authorService.AddAuthor(authorName, requestingUser);
+
+            author = await _repository.GetAsync(new AuthorSpec(book.Author), cancellationToken);
+        }
+
+        // check the status of the genre
+        var genre = await _repository.GetAsync(new GenreSpec(book.Genre), cancellationToken);
+
+        if (genre == null)
+        {
+            var genreName = new GenreAddDTO
+            {
+                Name = book.Genre
+            };
+            var genreResult = await _genreService.AddGenre(genreName, requestingUser);
+            genre = await _repository.GetAsync(new GenreSpec(book.Genre), cancellationToken);
+        }
+
         await _repository.AddAsync(new Book
         {
             Title = book.Title,
             Description = book.Description,
-            Pages = book.Pages
+            Pages = book.Pages,
+            Author = author,
+            Genre = genre,
+            GenreId = genre.Id,
+            AuthorId = author.Id
         }, cancellationToken); // A new entity is created and persisted in the database.
 
         return ServiceResponse.ForSuccess();
@@ -73,8 +121,44 @@ public class BookService : IBookService
             entity.Title = book.Title ?? entity.Title;
             entity.Description = book.Description ?? entity.Description;
             entity.Pages = book.Pages ?? entity.Pages;
+            entity.AuthorId = entity.AuthorId;
+            // check the status of author
+            var author = await _repository.GetAsync(new AuthorSpec(book.Author), cancellationToken);
+
+            if (author == null)
+            {
+                var authorName = new AuthorAddDTO
+                {
+                    Name = book.Author
+                };
+                var authorResult = await _authorService.AddAuthor(authorName, requestingUser);
+
+                author = await _repository.GetAsync(new AuthorSpec(book.Author), cancellationToken);
+                entity.AuthorId = author.Id;
+            }
+
+            var genre = await _repository.GetAsync(new GenreSpec(book.Genre), cancellationToken);
+
+            if (genre == null)
+            {
+                var genreName = new GenreAddDTO
+                {
+                    Name = book.Genre
+                };
+                var genreResult = await _genreService.AddGenre(genreName, requestingUser);
+                genre = await _repository.GetAsync(new GenreSpec(book.Genre), cancellationToken);
+                entity.GenreId = genre.Id;
+            }
+            entity.Author = author ?? entity.Author;
+            
+            entity.Genre = genre ?? entity.Genre;
+            entity.GenreId = entity.GenreId;
+
 
             await _repository.UpdateAsync(entity, cancellationToken); // Update the entity and persist the changes.
+        } else
+        {
+            return ServiceResponse<BookDTO>.FromError(CommonErrors.UserNotFound);
         }
 
         return ServiceResponse.ForSuccess();
@@ -87,7 +171,7 @@ public class BookService : IBookService
             return ServiceResponse.FromError(new(HttpStatusCode.Forbidden, "Only the admin or the own user can delete the book!", ErrorCodes.CannotDelete));
         }
 
-        await _repository.DeleteAsync<User>(id, cancellationToken); // Delete the entity.
+        await _repository.DeleteAsync<Book>(id, cancellationToken); // Delete the entity.
 
         return ServiceResponse.ForSuccess();
     }

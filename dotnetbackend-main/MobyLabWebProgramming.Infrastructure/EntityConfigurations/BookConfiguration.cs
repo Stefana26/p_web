@@ -24,7 +24,7 @@ public class BookConfiguration : IEntityTypeConfiguration<Book>
         builder.Property(e => e.UpdatedAt)
             .IsRequired();
 
-        //// many-to-one relation between book and author
+        // many-to-one relation between book and author
         builder.HasOne(e => e.Author) // This specifies a one-to-many relation.
             .WithMany(e => e.Books) // This provides the reverse mapping for the one-to-many relation. 
             .HasForeignKey(e => e.AuthorId) // Here the foreign key column is specified.

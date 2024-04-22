@@ -20,11 +20,9 @@ public class AuthorConfiguration : IEntityTypeConfiguration<Author>
             .HasMaxLength(255) // This specifies the maximum length for varchar type in the database.
             .IsRequired();
         builder.Property(e => e.Nationality)
-            .HasMaxLength(255)
-            .IsRequired();
+            .HasMaxLength(255);
         builder.Property(e => e.Biography)
-            .HasMaxLength(4095)
-            .IsRequired();
+            .HasMaxLength(4095);
         builder.Property(e => e.CreatedAt)
             .IsRequired();
         builder.Property(e => e.UpdatedAt)

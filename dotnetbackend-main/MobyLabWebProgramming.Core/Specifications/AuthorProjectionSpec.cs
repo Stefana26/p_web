@@ -15,7 +15,22 @@ public class AuthorProjectionSpec : BaseSpec<AuthorProjectionSpec, Author, Autho
     {
         Id = e.Id,
         Name = e.Name,
-        Biography = e.Biography
+        Biography = e.Biography,
+        Nationality = e.Nationality,
+        Books = e.Books.Select(book => new BookDTO
+        {
+            Id = book.Id,
+            Title = book.Title,
+            Genre = new GenreDTO
+            {
+                Id = book.Genre.Id,
+                Name = book.Genre.Name
+                // Add other properties of GenreDTO if needed
+            },
+            Description = book.Description,
+            Pages = book.Pages
+        }).ToList()
+
     };
 
     public AuthorProjectionSpec(Guid id) : base(id)

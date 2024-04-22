@@ -35,7 +35,6 @@ public class ReviewConfiguration : IEntityTypeConfiguration<Review>
             .WithMany(e => e.Reviews)
             .HasForeignKey(e => e.UserId)
             .HasPrincipalKey(e => e.Id)
-            .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
     }
 }

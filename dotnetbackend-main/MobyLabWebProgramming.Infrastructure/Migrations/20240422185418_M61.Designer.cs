@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MobyLabWebProgramming.Infrastructure.Database;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MobyLabWebProgramming.Infrastructure.Migrations
 {
     [DbContext(typeof(WebAppDatabaseContext))]
-    partial class WebAppDatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20240422185418_M61")]
+    partial class M61
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,6 +32,7 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("Biography")
+                        .IsRequired()
                         .HasMaxLength(4095)
                         .HasColumnType("character varying(4095)");
 
@@ -42,6 +45,7 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                         .HasColumnType("character varying(255)");
 
                     b.Property<string>("Nationality")
+                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 
@@ -103,6 +107,7 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasMaxLength(4095)
                         .HasColumnType("character varying(4095)");
 
@@ -125,8 +130,7 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("BookId")
-                        .IsRequired()
+                    b.Property<Guid>("BookId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
@@ -135,7 +139,7 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<Guid?>("UserId")
+                    b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
                     b.Property<int>("Value")
@@ -291,7 +295,9 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
 
                     b.HasOne("MobyLabWebProgramming.Core.Entities.User", "User")
                         .WithMany("Ratings")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Book");
 

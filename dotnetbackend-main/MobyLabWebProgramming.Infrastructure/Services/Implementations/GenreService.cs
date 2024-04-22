@@ -49,7 +49,7 @@ public class GenreService : IGenreService
         await _repository.AddAsync(new Genre
         {
             Name = genre.Name,
-            Description = genre.Description
+            Description = genre.Description ?? null
         }, cancellationToken); // A new entity is created and persisted in the database.
 
         return ServiceResponse.ForSuccess();

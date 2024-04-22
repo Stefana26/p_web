@@ -16,7 +16,7 @@ public class RatingProjectionSpec : BaseSpec<RatingProjectionSpec, Rating, Ratin
         Id = e.Id,
         Value = e.Value,
         BookId = e.BookId,
-       // UserId = e.UserId
+        UserId = e.UserId
     };
 
     public RatingProjectionSpec(Guid id) : base(id)

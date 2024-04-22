@@ -48,12 +48,14 @@ namespace MobyLabWebProgramming.Infrastructure.Services.Implementations
                 return ServiceResponse.FromError(new(HttpStatusCode.Conflict, "The review already exists!", ErrorCodes.UserAlreadyExists));
             }
 
+            var user = await _repository.GetAsync(new UserSpec(requestingUser.Email), cancellationToken);
+
             await _repository.AddAsync(new Review
             {
                 Title = review.Title,
                 Content = review.Content,
-                //BookId = review.BookId,
-               // UserId = review.UserId
+                BookId = review.BookId,
+                User = user
             }, cancellationToken); // A new entity is created and persisted in the database.
 
             return ServiceResponse.ForSuccess();

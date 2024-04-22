@@ -8,6 +8,7 @@ namespace MobyLabWebProgramming.Core.DataTransferObjects
 {
     public class ReviewAddDTO
     {
+        public Guid BookId { get; set; }
         public string Title { get; set; } = default!;
         public string Content { get; set; } = default!;
         public int Rating { get; set; }

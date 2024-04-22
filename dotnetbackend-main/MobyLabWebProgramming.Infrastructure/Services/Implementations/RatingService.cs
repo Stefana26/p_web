@@ -41,6 +41,8 @@ namespace MobyLabWebProgramming.Infrastructure.Services.Implementations
 
             var result = await _repository.GetAsync(new RatingSpec(rating.Value), cancellationToken);
 
+            var user = await _repository.GetAsync(new UserSpec(requestingUser.Email), cancellationToken);
+
             //if (result != null)
             //{
             //    return ServiceResponse.FromError(new(HttpStatusCode.Conflict, "The book already exists!", ErrorCodes.UserAlreadyExists));
@@ -49,7 +51,9 @@ namespace MobyLabWebProgramming.Infrastructure.Services.Implementations
             await _repository.AddAsync(new Rating
             {
                 Value = rating.Value,
-                BookId = rating.BookId
+                BookId = rating.BookId,
+                UserId = user.Id,
+                User = user
             }, cancellationToken); // A new entity is created and persisted in the database.
 
             return ServiceResponse.ForSuccess();
@@ -67,7 +71,6 @@ namespace MobyLabWebProgramming.Infrastructure.Services.Implementations
             if (entity != null) // Verify if the book is not found, you cannot update an non-existing entity.
             {
                 entity.Value = rating.Value ?? entity.Value;
-                entity.BookId = rating.BookId ?? entity.BookId;
 
                 await _repository.UpdateAsync(entity, cancellationToken); // Update the entity and persist the changes.
             }

@@ -15,7 +15,19 @@ public class GenreProjectionSpec : BaseSpec<GenreProjectionSpec, Genre, GenreDTO
     {
         Id = e.Id,
         Name = e.Name,
-        Description = e.Description
+        Description = e.Description,
+         Books = e.Books.Select(book => new BookDTO
+         {
+             Id = book.Id,
+             Title = book.Title,
+             Author = new AuthorDTO
+             {
+                 Id = book.Author.Id,
+                 Name = book.Author.Name
+             },
+             Description = book.Description,
+             Pages = book.Pages
+         }).ToList()
     };
 
     public GenreProjectionSpec(Guid id) : base(id)

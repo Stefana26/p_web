@@ -35,8 +35,6 @@ public class RatingConfiguration : IEntityTypeConfiguration<Rating>
         builder.HasOne(e => e.User)
             .WithMany(e => e.Ratings)
             .HasForeignKey(e => e.UserId)
-            .HasPrincipalKey(e => e.Id)
-            .IsRequired()
-            .OnDelete(DeleteBehavior.Cascade);
+            .HasPrincipalKey(e => e.Id);
     }
 }
