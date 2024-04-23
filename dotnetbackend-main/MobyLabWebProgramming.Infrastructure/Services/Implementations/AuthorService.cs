@@ -2,6 +2,7 @@
 using MobyLabWebProgramming.Core.Entities;
 using MobyLabWebProgramming.Core.Enums;
 using MobyLabWebProgramming.Core.Errors;
+using MobyLabWebProgramming.Core.Requests;
 using MobyLabWebProgramming.Core.Responses;
 using MobyLabWebProgramming.Core.Specifications;
 using MobyLabWebProgramming.Infrastructure.Database;
@@ -30,21 +31,28 @@ public class AuthorService : IAuthorService
 
         return result != null ?
             ServiceResponse<AuthorDTO>.ForSuccess(result) :
-            ServiceResponse<AuthorDTO>.FromError(CommonErrors.UserNotFound); // Pack the result or error into a ServiceResponse.
+            ServiceResponse<AuthorDTO>.FromError(CommonErrors.AuthorNotFound); // Pack the result or error into a ServiceResponse.
+    }
+
+    public async Task<ServiceResponse<PagedResponse<AuthorDTO>>> GetAuthors(PaginationSearchQueryParams pagination, CancellationToken cancellationToken = default)
+    {
+        var result = await _repository.PageAsync(pagination, new AuthorProjectionSpec(pagination.Search), cancellationToken); // Use the specification and pagination API to get only some entities from the database.
+
+        return ServiceResponse<PagedResponse<AuthorDTO>>.ForSuccess(result);// Pack the result or error into a ServiceResponse.
     }
 
     public async Task<ServiceResponse> AddAuthor(AuthorAddDTO author, UserDTO? requestingUser, CancellationToken cancellationToken = default)
     {
         if (requestingUser != null && requestingUser.Role != UserRoleEnum.Admin) // Verify who can add the user, you can change this however you se fit.
         {
-            return ServiceResponse.FromError(new(HttpStatusCode.Forbidden, "Only the admin can add books!", ErrorCodes.CannotAdd));
+            return ServiceResponse.FromError(new(HttpStatusCode.Forbidden, "Only the admin can add authors!", ErrorCodes.CannotAdd));
         }
 
         var result = await _repository.GetAsync(new AuthorSpec(author.Name), cancellationToken);
 
         if (result != null)
         {
-            return ServiceResponse.FromError(new(HttpStatusCode.Conflict, "The book already exists!", ErrorCodes.UserAlreadyExists));
+            return ServiceResponse.FromError(new(HttpStatusCode.Conflict, "The author already exists!", ErrorCodes.AuthorAlreadyExists));
         }
 
         await _repository.AddAsync(new Author
@@ -59,9 +67,9 @@ public class AuthorService : IAuthorService
 
     public async Task<ServiceResponse> UpdateAuthor(AuthorUpdateDTO author, UserDTO? requestingUser, CancellationToken cancellationToken = default)
     {
-        if (requestingUser != null && requestingUser.Role != UserRoleEnum.Admin)
+        if (requestingUser != null && requestingUser.Role != UserRoleEnum.Admin && requestingUser.Role != UserRoleEnum.Personnel)
         {
-            return ServiceResponse.FromError(new(HttpStatusCode.Forbidden, "Only the admin or the own user can update the user!", ErrorCodes.CannotUpdate));
+            return ServiceResponse.FromError(new(HttpStatusCode.Forbidden, "Only the admin, the personnel or the own user can update the user!", ErrorCodes.CannotUpdate));
         }
 
         var entity = await _repository.GetAsync(new AuthorSpec(author.Id), cancellationToken);
@@ -74,7 +82,7 @@ public class AuthorService : IAuthorService
             await _repository.UpdateAsync(entity, cancellationToken); // Update the entity and persist the changes.
         } else
         {
-            return ServiceResponse<BookDTO>.FromError(CommonErrors.UserNotFound);
+            return ServiceResponse<AuthorDTO>.FromError(CommonErrors.AuthorNotFound);
         }
 
         return ServiceResponse.ForSuccess();
@@ -83,7 +91,7 @@ public class AuthorService : IAuthorService
     {
         if (requestingUser != null && requestingUser.Role != UserRoleEnum.Admin && requestingUser.Id != id) // Verify who can add the user, you can change this however you se fit.
         {
-            return ServiceResponse.FromError(new(HttpStatusCode.Forbidden, "Only the admin or the own user can delete the book!", ErrorCodes.CannotDelete));
+            return ServiceResponse.FromError(new(HttpStatusCode.Forbidden, "Only the admin can delete the author!", ErrorCodes.CannotDelete));
         }
 
         await _repository.DeleteAsync<Author>(id, cancellationToken); // Delete the entity.

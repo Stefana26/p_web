@@ -2,6 +2,7 @@
 using MobyLabWebProgramming.Core.Entities;
 using MobyLabWebProgramming.Core.Enums;
 using MobyLabWebProgramming.Core.Errors;
+using MobyLabWebProgramming.Core.Requests;
 using MobyLabWebProgramming.Core.Responses;
 using MobyLabWebProgramming.Core.Specifications;
 using MobyLabWebProgramming.Infrastructure.Database;
@@ -29,21 +30,28 @@ public class GenreService : IGenreService
 
         return result != null ?
             ServiceResponse<GenreDTO>.ForSuccess(result) :
-            ServiceResponse<GenreDTO>.FromError(CommonErrors.UserNotFound); // Pack the result or error into a ServiceResponse.
+            ServiceResponse<GenreDTO>.FromError(CommonErrors.GenreNotFound); // Pack the result or error into a ServiceResponse.
+    }
+
+    public async Task<ServiceResponse<PagedResponse<GenreDTO>>> GetGenres(PaginationSearchQueryParams pagination, CancellationToken cancellationToken = default)
+    {
+        var result = await _repository.PageAsync(pagination, new GenreProjectionSpec(pagination.Search), cancellationToken); // Use the specification and pagination API to get only some entities from the database.
+
+        return ServiceResponse<PagedResponse<GenreDTO>>.ForSuccess(result);// Pack the result or error into a ServiceResponse.
     }
 
     public async Task<ServiceResponse> AddGenre(GenreAddDTO genre, UserDTO? requestingUser, CancellationToken cancellationToken = default)
     {
         if (requestingUser != null && requestingUser.Role != UserRoleEnum.Admin) // Verify who can add the user, you can change this however you se fit.
         {
-            return ServiceResponse.FromError(new(HttpStatusCode.Forbidden, "Only the admin can add books!", ErrorCodes.CannotAdd));
+            return ServiceResponse.FromError(new(HttpStatusCode.Forbidden, "Only the admin can add genres!", ErrorCodes.CannotAdd));
         }
 
         var result = await _repository.GetAsync(new GenreSpec(genre.Name), cancellationToken);
 
         if (result != null)
         {
-            return ServiceResponse.FromError(new(HttpStatusCode.Conflict, "The book already exists!", ErrorCodes.UserAlreadyExists));
+            return ServiceResponse.FromError(new(HttpStatusCode.Conflict, "The genre already exists!", ErrorCodes.GenreAlreadyExists));
         }
 
         await _repository.AddAsync(new Genre
@@ -57,9 +65,9 @@ public class GenreService : IGenreService
 
     public async Task<ServiceResponse> UpdateGenre(GenreUpdateDTO genre, UserDTO? requestingUser, CancellationToken cancellationToken = default)
     {
-        if (requestingUser != null && requestingUser.Role != UserRoleEnum.Admin)
+        if (requestingUser != null && (requestingUser.Role != UserRoleEnum.Admin && requestingUser.Role != UserRoleEnum.Personnel))
         {
-            return ServiceResponse.FromError(new(HttpStatusCode.Forbidden, "Only the admin or the own user can update the user!", ErrorCodes.CannotUpdate));
+            return ServiceResponse.FromError(new(HttpStatusCode.Forbidden, "Only the admin, the personnel or the own user can update the genre!", ErrorCodes.CannotUpdate));
         }
 
         var entity = await _repository.GetAsync(new GenreSpec(genre.Id), cancellationToken);

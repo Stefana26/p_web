@@ -42,7 +42,6 @@ public class UserController : AuthorizedController // Here we use the Authorized
     /// Generally, if you need to get multiple values from the database use pagination if there are many entries.
     /// It will improve performance and reduce resource consumption for both client and server.
     /// </summary>
-    [Authorize]
     [HttpGet] // This attribute will make the controller respond to a HTTP GET request on the route /api/User/GetPage.
     public async Task<ActionResult<RequestResponse<PagedResponse<UserDTO>>>> GetPage([FromQuery] PaginationSearchQueryParams pagination) // The FromQuery attribute will bind the parameters matching the names of
                                                                                                                                          // the PaginationSearchQueryParams properties to the object in the method parameter.
@@ -72,7 +71,6 @@ public class UserController : AuthorizedController // Here we use the Authorized
     /// <summary>
     /// This method implements the Update operation (U from CRUD) on a user. 
     /// </summary>
-    [Authorize]
     [HttpPut] // This attribute will make the controller respond to a HTTP PUT request on the route /api/User/Update.
     public async Task<ActionResult<RequestResponse>> Update([FromBody] UserUpdateDTO user) // The FromBody attribute indicates that the parameter is deserialized from the JSON body.
     {
@@ -90,7 +88,6 @@ public class UserController : AuthorizedController // Here we use the Authorized
     /// This method implements the Delete operation (D from CRUD) on a user.
     /// Note that in the HTTP RFC you cannot have a body for DELETE operations.
     /// </summary>
-    [Authorize]
     [HttpDelete("{id:guid}")] // This attribute will make the controller respond to a HTTP DELETE request on the route /api/User/Delete/<some_guid>.
     public async Task<ActionResult<RequestResponse>> Delete([FromRoute] Guid id) // The FromRoute attribute will bind the id from the route to this parameter.
     {

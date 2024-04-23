@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MobyLabWebProgramming.Core.DataTransferObjects;
+using MobyLabWebProgramming.Core.Requests;
 using MobyLabWebProgramming.Core.Responses;
 using MobyLabWebProgramming.Infrastructure.Authorization;
 using MobyLabWebProgramming.Infrastructure.Extensions;
@@ -19,7 +20,6 @@ public class GenreController : AuthorizedController
         _genreService = genreService;
     }
 
-    [Authorize] // You need to use this attribute to protect the route access, it will return a Forbidden status code if the JWT is not present or invalid, and also it will decode the JWT token.
     [HttpGet("{id:guid}")] // This attribute will make the controller respond to a HTTP GET request on the route /api/User/GetById/<some_guid>.
     public async Task<ActionResult<RequestResponse<GenreDTO>>> GetById([FromRoute] Guid id) // The FromRoute attribute will bind the id from the route to this parameter.
     {
@@ -30,7 +30,17 @@ public class GenreController : AuthorizedController
             this.ErrorMessageResult<GenreDTO>(currentUser.Error);
     }
 
-    [Authorize]
+    [HttpGet] // This attribute will make the controller respond to a HTTP GET request on the route /api/User/GetPage.
+    public async Task<ActionResult<RequestResponse<PagedResponse<GenreDTO>>>> GetPage([FromQuery] PaginationSearchQueryParams pagination) // The FromQuery attribute will bind the parameters matching the names of
+                                                                                                                                         // the PaginationSearchQueryParams properties to the object in the method parameter.
+    {
+        var currentUser = await GetCurrentUser();
+
+        return currentUser.Result != null ?
+            this.FromServiceResponse(await _genreService.GetGenres(pagination)) :
+            this.ErrorMessageResult<PagedResponse<GenreDTO>>(currentUser.Error);
+    }
+
     [HttpPost]
     public async Task<ActionResult<RequestResponse>> Add([FromBody] GenreAddDTO body)
     {
@@ -41,7 +51,6 @@ public class GenreController : AuthorizedController
             this.ErrorMessageResult(currentUser.Error);
     }
 
-    [Authorize]
     [HttpPut] // This attribute will make the controller respond to a HTTP PUT request on the route /api/User/Update.
     public async Task<ActionResult<RequestResponse>> Update([FromBody] GenreUpdateDTO genre) // The FromBody attribute indicates that the parameter is deserialized from the JSON body.
     {

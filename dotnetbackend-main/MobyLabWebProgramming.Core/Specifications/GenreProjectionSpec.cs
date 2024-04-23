@@ -1,4 +1,6 @@
-﻿using MobyLabWebProgramming.Core.DataTransferObjects;
+﻿using Ardalis.Specification;
+using Microsoft.EntityFrameworkCore;
+using MobyLabWebProgramming.Core.DataTransferObjects;
 using MobyLabWebProgramming.Core.Entities;
 using System;
 using System.Collections.Generic;
@@ -20,11 +22,11 @@ public class GenreProjectionSpec : BaseSpec<GenreProjectionSpec, Genre, GenreDTO
          {
              Id = book.Id,
              Title = book.Title,
-             Author = new AuthorDTO
+             Author = new AuthorAddDTO
              {
-                 Id = book.Author.Id,
                  Name = book.Author.Name
              },
+             AuthorId = book.AuthorId,
              Description = book.Description,
              Pages = book.Pages
          }).ToList()
@@ -32,5 +34,20 @@ public class GenreProjectionSpec : BaseSpec<GenreProjectionSpec, Genre, GenreDTO
 
     public GenreProjectionSpec(Guid id) : base(id)
     {
+    }
+
+    public GenreProjectionSpec(string? search)
+    {
+        search = !string.IsNullOrWhiteSpace(search) ? search.Trim() : null;
+
+        if (search == null)
+        {
+            return;
+        }
+
+        var searchExpr = $"%{search.Replace(" ", "%")}%";
+
+        Query.Where(e => EF.Functions.ILike(e.Name, searchExpr)); // This is an example on who database specific expressions can be used via C# expressions.
+                                                                  // Note that this will be translated to the database something like "where user.Name ilike '%str%'".
     }
 }

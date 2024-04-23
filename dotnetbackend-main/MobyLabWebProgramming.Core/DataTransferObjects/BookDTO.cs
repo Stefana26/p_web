@@ -14,13 +14,14 @@ public class BookDTO
     public Guid Id { get; set; }
     public string Title { get; set; } = default!;
     [System.Text.Json.Serialization.JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public AuthorDTO Author { get; set; } = default!;
+    public AuthorAddDTO Author { get; set; } = default!;
     [System.Text.Json.Serialization.JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public Guid? AuthorId { get; set; } = default!;
     [System.Text.Json.Serialization.JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public GenreDTO Genre { get; set; } = default!;
+    public GenreAddDTO Genre { get; set; } = default!;
     [System.Text.Json.Serialization.JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public Guid? GenreId { get; set; } = default!;
+    [System.Text.Json.Serialization.JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string Description { get; set; } = default!;
     public int Pages { get; set; }
     [System.Text.Json.Serialization.JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]

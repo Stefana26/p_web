@@ -3,6 +3,7 @@ using MobyLabWebProgramming.Core.DataTransferObjects;
 using MobyLabWebProgramming.Core.Entities;
 using MobyLabWebProgramming.Core.Enums;
 using MobyLabWebProgramming.Core.Errors;
+using MobyLabWebProgramming.Core.Requests;
 using MobyLabWebProgramming.Core.Responses;
 using MobyLabWebProgramming.Core.Specifications;
 using MobyLabWebProgramming.Infrastructure.Database;
@@ -38,17 +39,14 @@ public class BookService : IBookService
 
         return result != null ?
             ServiceResponse<BookDTO>.ForSuccess(result) :
-            ServiceResponse<BookDTO>.FromError(CommonErrors.UserNotFound); // Pack the result or error into a ServiceResponse.
+            ServiceResponse<BookDTO>.FromError(CommonErrors.BookNotFound); // Pack the result or error into a ServiceResponse.
     }
 
-    public async Task<ServiceResponse<List<BookDTO>>> GetBooks(CancellationToken cancellationToken = default)
+    public async Task<ServiceResponse<PagedResponse<BookDTO>>> GetBooks(PaginationSearchQueryParams pagination, CancellationToken cancellationToken = default)
     {
-        var result = await _repository.ListAsync(new BookProjectionSpec(Guid.Empty), cancellationToken); // Get a user using a specification on the repository.
+        var result = await _repository.PageAsync(pagination, new BookProjectionSpec(pagination.Search), cancellationToken); // Use the specification and pagination API to get only some entities from the database.
 
-        List<BookDTO> bookDTOs = result.ToList();
-        return result != null ?
-            ServiceResponse<List<BookDTO>>.ForSuccess(bookDTOs) :
-            ServiceResponse<List<BookDTO>>.FromError(CommonErrors.UserNotFound); // Pack the result or error into a ServiceResponse.
+        return ServiceResponse<PagedResponse<BookDTO>>.ForSuccess(result);// Pack the result or error into a ServiceResponse.
     }
 
     public async Task<ServiceResponse> AddBook(BookAddDTO book, UserDTO? requestingUser, CancellationToken cancellationToken = default)
@@ -62,7 +60,7 @@ public class BookService : IBookService
 
         if (result != null)
         {
-            return ServiceResponse.FromError(new(HttpStatusCode.Conflict, "The book already exists!", ErrorCodes.UserAlreadyExists));
+            return ServiceResponse.FromError(new(HttpStatusCode.Conflict, "The book already exists!", ErrorCodes.BookAlreadyExists));
         }
 
 
@@ -109,7 +107,7 @@ public class BookService : IBookService
 
     public async Task<ServiceResponse> UpdateBook(BookUpdateDTO book, UserDTO? requestingUser, CancellationToken cancellationToken = default)
     {
-        if (requestingUser != null && requestingUser.Role != UserRoleEnum.Admin)
+        if (requestingUser != null && (requestingUser.Role != UserRoleEnum.Admin && requestingUser.Role != UserRoleEnum.Personnel))
         {
             return ServiceResponse.FromError(new(HttpStatusCode.Forbidden, "Only the admin or the own user can update the user!", ErrorCodes.CannotUpdate));
         }
@@ -158,7 +156,7 @@ public class BookService : IBookService
             await _repository.UpdateAsync(entity, cancellationToken); // Update the entity and persist the changes.
         } else
         {
-            return ServiceResponse<BookDTO>.FromError(CommonErrors.UserNotFound);
+            return ServiceResponse<BookDTO>.FromError(CommonErrors.BookNotFound);
         }
 
         return ServiceResponse.ForSuccess();

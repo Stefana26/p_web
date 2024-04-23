@@ -21,7 +21,6 @@ namespace MobyLabWebProgramming.Backend.Controllers
             _bookService = bookService;
         }
 
-        [Authorize] // You need to use this attribute to protect the route access, it will return a Forbidden status code if the JWT is not present or invalid, and also it will decode the JWT token.
         [HttpGet("{id:guid}")] // This attribute will make the controller respond to a HTTP GET request on the route /api/User/GetById/<some_guid>.
         public async Task<ActionResult<RequestResponse<BookDTO>>> GetById([FromRoute] Guid id) // The FromRoute attribute will bind the id from the route to this parameter.
         {
@@ -32,16 +31,17 @@ namespace MobyLabWebProgramming.Backend.Controllers
                 this.ErrorMessageResult<BookDTO>(currentUser.Error);
         }
 
-        [Authorize] // You need to use this attribute to protect the route access, it will return a Forbidden status code if the JWT is not present or invalid, and also it will decode the JWT token.
-        [HttpGet] // This attribute will make the controller respond to a HTTP GET request on the route /api/User/GetById/<some_guid>.
-        public async Task<ActionResult<RequestResponse<List<BookDTO>>>> GetAllTheBooks() // The FromRoute attribute will bind the id from the route to this parameter.
+        [HttpGet] // This attribute will make the controller respond to a HTTP GET request on the route /api/User/GetPage.
+        public async Task<ActionResult<RequestResponse<PagedResponse<BookDTO>>>> GetPage([FromQuery] PaginationSearchQueryParams pagination) // The FromQuery attribute will bind the parameters matching the names of
+                                                                                                                                             // the PaginationSearchQueryParams properties to the object in the method parameter.
         {
             var currentUser = await GetCurrentUser();
 
             return currentUser.Result != null ?
-                this.FromServiceResponse(await _bookService.GetBooks()) :
-                this.ErrorMessageResult<List<BookDTO>>(currentUser.Error);
+                this.FromServiceResponse(await _bookService.GetBooks(pagination)) :
+                this.ErrorMessageResult<PagedResponse<BookDTO>>(currentUser.Error);
         }
+
 
         [Authorize]
         [HttpPost]
@@ -54,7 +54,6 @@ namespace MobyLabWebProgramming.Backend.Controllers
                 this.ErrorMessageResult(currentUser.Error);
         }
 
-        [Authorize]
         [HttpPut] // This attribute will make the controller respond to a HTTP PUT request on the route /api/User/Update.
         public async Task<ActionResult<RequestResponse>> Update([FromBody] BookUpdateDTO book) // The FromBody attribute indicates that the parameter is deserialized from the JSON body.
         {

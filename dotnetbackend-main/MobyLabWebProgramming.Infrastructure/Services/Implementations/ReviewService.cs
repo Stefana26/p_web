@@ -31,12 +31,12 @@ namespace MobyLabWebProgramming.Infrastructure.Services.Implementations
 
             return result != null ?
                 ServiceResponse<ReviewDTO>.ForSuccess(result) :
-                ServiceResponse<ReviewDTO>.FromError(CommonErrors.UserNotFound); // Pack the result or error into a ServiceResponse.
+                ServiceResponse<ReviewDTO>.FromError(CommonErrors.ReviewNotFound); // Pack the result or error into a ServiceResponse.
         }
 
         public async Task<ServiceResponse> AddReview(ReviewAddDTO review, UserDTO? requestingUser, CancellationToken cancellationToken = default)
         {
-            if (requestingUser != null && requestingUser.Role != UserRoleEnum.Admin) // Verify who can add the user, you can change this however you se fit.
+            if (requestingUser != null && requestingUser.Role != UserRoleEnum.Client) // Verify who can add the user, you can change this however you se fit.
             {
                 return ServiceResponse.FromError(new(HttpStatusCode.Forbidden, "Only the admin can add reviews!", ErrorCodes.CannotAdd));
             }
@@ -45,7 +45,7 @@ namespace MobyLabWebProgramming.Infrastructure.Services.Implementations
 
             if (result != null)
             {
-                return ServiceResponse.FromError(new(HttpStatusCode.Conflict, "The review already exists!", ErrorCodes.UserAlreadyExists));
+                return ServiceResponse.FromError(new(HttpStatusCode.Conflict, "The review already exists!", ErrorCodes.ReviewAlreadyExists));
             }
 
             var user = await _repository.GetAsync(new UserSpec(requestingUser.Email), cancellationToken);
@@ -63,7 +63,7 @@ namespace MobyLabWebProgramming.Infrastructure.Services.Implementations
 
         public async Task<ServiceResponse> UpdateReview(ReviewUpdateDTO review, UserDTO? requestingUser, CancellationToken cancellationToken = default)
         {
-            if (requestingUser != null && requestingUser.Role != UserRoleEnum.Admin)
+            if (requestingUser != null && requestingUser.Role != UserRoleEnum.Client)
             {
                 return ServiceResponse.FromError(new(HttpStatusCode.Forbidden, "Only the admin or the own user can update the review!", ErrorCodes.CannotUpdate));
             }
@@ -76,6 +76,9 @@ namespace MobyLabWebProgramming.Infrastructure.Services.Implementations
                 entity.Content = review.Content ?? entity.Content;
 
                 await _repository.UpdateAsync(entity, cancellationToken); // Update the entity and persist the changes.
+            } else
+            {
+                return ServiceResponse.FromError(CommonErrors.ReviewNotFound);
             }
 
             return ServiceResponse.ForSuccess();
@@ -83,7 +86,7 @@ namespace MobyLabWebProgramming.Infrastructure.Services.Implementations
 
         public async Task<ServiceResponse> DeleteReview(Guid id, UserDTO? requestingUser = default, CancellationToken cancellationToken = default)
         {
-            if (requestingUser != null && requestingUser.Role != UserRoleEnum.Admin && requestingUser.Id != id) // Verify who can add the user, you can change this however you se fit.
+            if (requestingUser != null && requestingUser.Role != UserRoleEnum.Client && requestingUser.Id != id) // Verify who can add the user, you can change this however you se fit.
             {
                 return ServiceResponse.FromError(new(HttpStatusCode.Forbidden, "Only the admin or the own user can delete the review!", ErrorCodes.CannotDelete));
             }
