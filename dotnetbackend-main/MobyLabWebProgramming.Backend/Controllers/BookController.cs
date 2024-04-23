@@ -20,7 +20,7 @@ namespace MobyLabWebProgramming.Backend.Controllers
         {
             _bookService = bookService;
         }
-
+        [Authorize]
         [HttpGet("{id:guid}")] // This attribute will make the controller respond to a HTTP GET request on the route /api/User/GetById/<some_guid>.
         public async Task<ActionResult<RequestResponse<BookDTO>>> GetById([FromRoute] Guid id) // The FromRoute attribute will bind the id from the route to this parameter.
         {
@@ -30,7 +30,7 @@ namespace MobyLabWebProgramming.Backend.Controllers
                 this.FromServiceResponse(await _bookService.GetBook(id)) :
                 this.ErrorMessageResult<BookDTO>(currentUser.Error);
         }
-
+        [Authorize]
         [HttpGet] // This attribute will make the controller respond to a HTTP GET request on the route /api/User/GetPage.
         public async Task<ActionResult<RequestResponse<PagedResponse<BookDTO>>>> GetPage([FromQuery] PaginationSearchQueryParams pagination) // The FromQuery attribute will bind the parameters matching the names of
                                                                                                                                              // the PaginationSearchQueryParams properties to the object in the method parameter.

@@ -20,7 +20,7 @@ namespace MobyLabWebProgramming.Backend.Controllers
         {
             _authorService = authorService;
         }
-
+        [Authorize]
         [HttpGet("{id:guid}")] // This attribute will make the controller respond to a HTTP GET request on the route /api/User/GetById/<some_guid>.
         public async Task<ActionResult<RequestResponse<AuthorDTO>>> GetById([FromRoute] Guid id) // The FromRoute attribute will bind the id from the route to this parameter.
         {
@@ -41,7 +41,7 @@ namespace MobyLabWebProgramming.Backend.Controllers
                 this.FromServiceResponse(await _authorService.AddAuthor(body, currentUser.Result)) :
                 this.ErrorMessageResult(currentUser.Error);
         }
-
+        [Authorize]
         [HttpGet] // This attribute will make the controller respond to a HTTP GET request on the route /api/User/GetPage.
         public async Task<ActionResult<RequestResponse<PagedResponse<AuthorDTO>>>> GetPage([FromQuery] PaginationSearchQueryParams pagination) // The FromQuery attribute will bind the parameters matching the names of
                                                                                                                                              // the PaginationSearchQueryParams properties to the object in the method parameter.
@@ -53,7 +53,7 @@ namespace MobyLabWebProgramming.Backend.Controllers
                 this.ErrorMessageResult<PagedResponse<AuthorDTO>>(currentUser.Error);
         }
 
-
+        [Authorize]
         [HttpPut] // This attribute will make the controller respond to a HTTP PUT request on the route /api/User/Update.
         public async Task<ActionResult<RequestResponse>> Update([FromBody] AuthorUpdateDTO author) // The FromBody attribute indicates that the parameter is deserialized from the JSON body.
         {
