@@ -1,5 +1,12 @@
 {
     "globals.welcome": "Welcome!",
+    "globals.register": "Register",
+    "globals.confirmPassword": "Confirm password",
+    "globals.title": "Title",
+    "globals.book": "Books",
+    "globals.author": "Author",
+    "globals.genre": "Genre",
+    "globals.pages": "Pages",
     "globals.login": "Login",
     "globals.logout": "Logout",
     "globals.submit": "Submit",

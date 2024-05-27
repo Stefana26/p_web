@@ -7,6 +7,7 @@ import { LoginPage } from "@presentation/pages/LoginPage";
 import { RegisterPage } from "@presentation/pages/RegisterPage";
 import { UserFilesPage } from "@presentation/pages/UserFilesPage";
 import { UsersPage } from "@presentation/pages/UsersPage";
+import { BookPage } from "@presentation/pages/BookPage";
 import { Route, Routes } from "react-router-dom";
 import { AppRoute } from "routes";
 
@@ -22,6 +23,7 @@ export function App() {
         <Route path={AppRoute.Register} element={<RegisterPage />} />
         {isAdmin && <Route path={AppRoute.Users} element={<UsersPage />} />} {/* If the user doesn't have the right role this route shouldn't be used. */}
         {isAdmin && <Route path={AppRoute.UserFiles} element={<UserFilesPage />} />}
+        {isAdmin && <Route path={AppRoute.Book} element={<BookPage />} />}
       </Routes>
     </AppIntlProvider>
 }

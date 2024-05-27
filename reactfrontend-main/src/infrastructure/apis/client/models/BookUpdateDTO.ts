@@ -24,12 +24,6 @@ export interface BookUpdateDTO {
      * @type {string}
      * @memberof BookUpdateDTO
      */
-    id?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof BookUpdateDTO
-     */
     title?: string | null;
     /**
      * 
@@ -43,12 +37,6 @@ export interface BookUpdateDTO {
      * @memberof BookUpdateDTO
      */
     description?: string | null;
-    /**
-     * 
-     * @type {number}
-     * @memberof BookUpdateDTO
-     */
-    pages?: number | null;
     /**
      * 
      * @type {string}
@@ -76,11 +64,9 @@ export function BookUpdateDTOFromJSONTyped(json: any, ignoreDiscriminator: boole
     }
     return {
         
-        'id': !exists(json, 'id') ? undefined : json['id'],
         'title': !exists(json, 'title') ? undefined : json['title'],
         'author': !exists(json, 'author') ? undefined : json['author'],
         'description': !exists(json, 'description') ? undefined : json['description'],
-        'pages': !exists(json, 'pages') ? undefined : json['pages'],
         'genre': !exists(json, 'genre') ? undefined : json['genre'],
     };
 }
@@ -94,11 +80,9 @@ export function BookUpdateDTOToJSON(value?: BookUpdateDTO | null): any {
     }
     return {
         
-        'id': value.id,
         'title': value.title,
         'author': value.author,
         'description': value.description,
-        'pages': value.pages,
         'genre': value.genre,
     };
 }

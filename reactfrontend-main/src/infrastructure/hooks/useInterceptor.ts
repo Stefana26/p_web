@@ -12,13 +12,41 @@ const { fetch: originalFetch } = window;
 export const useInterceptor = (props: InterceptorPros) => {
     if (window.fetch === originalFetch) {
         window.fetch = async (...args) => {
-            const [resource, config] = props.onRequest ? props.onRequest(args) : args;
+            let resource = args[0];
+            let config = args[1];
+
+            if (props.onRequest) {
+                try {
+                    [resource, config] = props.onRequest(args);
+                } catch (e) {
+                    console.error("Error in onRequest interceptor:", e);
+                    throw e;
+                }
+            }
+
+            console.log("Fetch request:", { resource, config });
 
             try {
                 const response = await originalFetch(resource, config);
-                return props.onResponse ? props.onResponse(response) : response;
+                console.log("Fetch response:", response);
+
+                if (props.onResponse) {
+                    return props.onResponse(response);
+                }
+                return response;
             } catch (error: any) {
-                throw props.onResponseError ? props.onResponseError(error) : error;
+                console.error("Fetch error:", error);
+
+                if (props.onResponseError) {
+                    try {
+                        return props.onResponseError(error);
+                    } catch (e) {
+                        console.error("Error in onResponseError interceptor:", e);
+                        throw e;
+                    }
+                } else {
+                    throw error;
+                }
             }
         };
 

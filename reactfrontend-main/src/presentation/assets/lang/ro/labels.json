@@ -1,5 +1,6 @@
 {
     "labels.itemsPerPage": "Intrari pe pagina",
+    "labels.addBook": "Adauga o carte",
     "labels.paginationLabelNormal": "{from}-{to} din {count}",
     "labels.paginationLabelOverflow": "{from}-{to} din mai mult de {to}",
     "labels.yes": "Da",

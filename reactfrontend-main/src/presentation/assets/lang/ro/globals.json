@@ -1,5 +1,12 @@
 {
     "globals.welcome": "Bine ati venit!",
+    "globals.register": "Inregistrare",
+    "globals.confirmPassword": "Confirmare parola",
+    "globals.title": "Titlu",
+    "globals.author": "Autor",
+    "globals.book": "Carti",
+    "globals.genre": "Gen",
+    "globals.pages": "Pagini",
     "globals.login": "Autentificare",
     "globals.logout": "Iesire",
     "globals.submit": "Trimite",

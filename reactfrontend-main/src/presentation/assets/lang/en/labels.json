@@ -1,5 +1,6 @@
 {
     "labels.itemsPerPage": "Items per page",
+    "labels.addBook": "Add the book",
     "labels.paginationLabelNormal": "{from}-{to} of {count}",
     "labels.paginationLabelOverflow": "{from}-{to} of more than {to}",
     "labels.yes": "Yes",

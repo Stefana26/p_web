@@ -71,17 +71,43 @@ export const Navbar = () => {
                   </Link>
                 </Button>
               </Grid>
+              <Grid container item direction="column" xs={1}>
+                <Button color="inherit">
+                  <Link style={{ color: 'white' }} to={AppRoute.Book}>
+                    {formatMessage({ id: "globals.book" })}
+                  </Link>
+                </Button>
+              </Grid>
             </Grid>}
           </Grid>
           <Grid container item direction="column" xs={1}>
             <NavbarLanguageSelector />
           </Grid>
-          <Grid container item direction="column" xs={2}>
-            {!loggedIn && <Button color="inherit">  {/* If the user is not logged in show a button that redirects to the login page. */}
-              <Link style={{ color: 'white' }} to={AppRoute.Login}>
-                {formatMessage({ id: "globals.login" })}
-              </Link>
-            </Button>}
+          <Grid container item direction="column" xs={2} justifyContent="flex-end">
+            {!loggedIn && <Grid // If the user is logged in and it is an admin they can have new menu items shown.
+              container
+              item
+              direction="row"
+              xs={12}
+              alignItems="center"
+              wrap="nowrap"
+              columnSpacing={17}
+            >
+              <Grid container item direction="column" xs={1}>
+                <Button color="inherit">
+                  <Link style={{ color: 'white' }} to={AppRoute.Login}>
+                    {formatMessage({ id: "globals.login" })}
+                  </Link>
+                </Button>
+              </Grid>
+              <Grid container item direction="column" xs={1}>
+                <Button color="inherit">
+                  <Link style={{ color: 'white' }} to={AppRoute.Register}>
+                    {formatMessage({ id: "globals.register" })}
+                  </Link>
+                </Button>
+              </Grid>
+            </Grid>} 
             {loggedIn && <Button onClick={logout} color="inherit" > {/* Otherwise show the logout button. */}
               {formatMessage({ id: "globals.logout" })}
             </Button>}

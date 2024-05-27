@@ -107,18 +107,17 @@ public class BookService : IBookService
 
     public async Task<ServiceResponse> UpdateBook(BookUpdateDTO book, UserDTO? requestingUser, CancellationToken cancellationToken = default)
     {
-        if (requestingUser != null && (requestingUser.Role != UserRoleEnum.Admin && requestingUser.Role != UserRoleEnum.Personnel))
-        {
-            return ServiceResponse.FromError(new(HttpStatusCode.Forbidden, "Only the admin or the own user can update the user!", ErrorCodes.CannotUpdate));
-        }
+        //if (requestingUser != null && (requestingUser.Role != UserRoleEnum.Admin && requestingUser.Role != UserRoleEnum.Personnel))
+        //{
+        //    return ServiceResponse.FromError(new(HttpStatusCode.Forbidden, "Only the admin or the own user can update the user!", ErrorCodes.CannotUpdate));
+        //}
 
-        var entity = await _repository.GetAsync(new BookSpec(book.Id), cancellationToken);
+        var entity = await _repository.GetAsync(new BookSpec(book.Title), cancellationToken);
 
         if (entity != null) // Verify if the book is not found, you cannot update an non-existing entity.
         {
             entity.Title = book.Title ?? entity.Title;
             entity.Description = book.Description ?? entity.Description;
-            entity.Pages = book.Pages ?? entity.Pages;
             entity.AuthorId = entity.AuthorId;
             // check the status of author
             var author = await _repository.GetAsync(new AuthorSpec(book.Author), cancellationToken);
