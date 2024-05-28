@@ -14,10 +14,13 @@ export const useInterceptor = (props: InterceptorPros) => {
         window.fetch = async (...args) => {
             let resource = args[0];
             let config = args[1];
-
+            console.log("incepem");
+            console.log(config);
             if (props.onRequest) {
                 try {
                     [resource, config] = props.onRequest(args);
+                    console.log(resource);
+                    console.log(config);
                 } catch (e) {
                     console.error("Error in onRequest interceptor:", e);
                     throw e;

@@ -53,15 +53,12 @@ namespace MobyLabWebProgramming.Backend.Controllers
                 this.ErrorMessageResult<PagedResponse<AuthorDTO>>(currentUser.Error);
         }
 
-        [Authorize]
+
         [HttpPut] // This attribute will make the controller respond to a HTTP PUT request on the route /api/User/Update.
         public async Task<ActionResult<RequestResponse>> Update([FromBody] AuthorUpdateDTO author) // The FromBody attribute indicates that the parameter is deserialized from the JSON body.
         {
-            var currentUser = await GetCurrentUser();
-
-            return currentUser.Result != null ?
-                this.FromServiceResponse(await _authorService.UpdateAuthor(author, currentUser.Result)) :
-                this.ErrorMessageResult(currentUser.Error);
+            var result = this.FromServiceResponse(await _authorService.UpdateAuthor(author));
+            return result;
         }
 
         [Authorize]

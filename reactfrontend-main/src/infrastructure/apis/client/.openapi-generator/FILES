@@ -1,6 +1,7 @@
 apis/AuthorApi.ts
 apis/AuthorizationApi.ts
 apis/BookApi.ts
+apis/FeedbackApi.ts
 apis/GenreApi.ts
 apis/RatingApi.ts
 apis/ReviewApi.ts
@@ -24,6 +25,7 @@ models/BookDTORequestResponse.ts
 models/BookUpdateDTO.ts
 models/ErrorCodes.ts
 models/ErrorMessage.ts
+models/FeedbackAddDTO.ts
 models/Genre.ts
 models/GenreAddDTO.ts
 models/GenreDTO.ts

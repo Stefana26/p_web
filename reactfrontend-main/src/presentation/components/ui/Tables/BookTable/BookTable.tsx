@@ -21,8 +21,8 @@ const useHeader = (): { key: keyof BookDTO, name: string }[] => {
 
     return [
         { key: "title", name: formatMessage({ id: "globals.title" }) },
-        // { key: "author", name: formatMessage({ id: "globals.author" }) },
-      //  { key: "genre", name: formatMessage({ id: "globals.genre" }) },
+        { key: "isbn", name: formatMessage({ id: "globals.ISBN" }) },
+        //{ key: "genre", name: formatMessage({ id: "globals.genre" }) },
         { key: "description", name: formatMessage({ id: "globals.description" }) },
         { key: "pages", name: formatMessage({ id: "globals.pages" }) }
     ]
@@ -59,13 +59,6 @@ export const BookTable = () => {
         (entry.title ?? '').toLowerCase().includes(searchQuery.toLowerCase())
     );
 
-    // const [bookToUpdate, setBookToUpdate] = useState<BookUpdateDTO | null>(null);
-
-    // // // Handle the update action
-    // const handleUpdate = (entry: BookDTO) => {
-    //     const updatedBook: BookUpdateDTO = {id: "8399241b-f860-4039-885d-f7ffe91b578c", title: entry.title, author: "opaaa", description: entry.description, pages: entry.pages, genre: "SADSAdsa" }; // Create the BookUpdateDTO
-    //     update(updatedBook);
-    // };
 
     const { open } = useBookAddDialogController();
 

@@ -18,12 +18,6 @@ import { BookFormModel } from "./BookForm.types";
  * Here we declare the register form component.
  */
 type onSubmitType = () => void;
-interface FormData {
-    title: string;
-    author: string;
-    genre: string;
-    description: string;
-}   
 
 
 export const BookForm: React.FC<{ onSubmit: onSubmitType; initialData?: BookFormModel }> = ({ onSubmit, initialData }) => {
@@ -54,7 +48,6 @@ export const BookForm: React.FC<{ onSubmit: onSubmitType; initialData?: BookForm
                                 </FormHelperText>
                             </FormControl>
                      </Grid>
-
                      <Grid container item direction="column" xs={12} md={12} style={{ marginBottom: "1rem" }}>
                             <FormControl 
                                 fullWidth
@@ -74,7 +67,25 @@ export const BookForm: React.FC<{ onSubmit: onSubmitType; initialData?: BookForm
                                 </FormHelperText>
                             </FormControl>
                     </Grid>
-
+                    <Grid container item direction="column" xs={12} md={12} style={{ marginBottom: "1rem" }}>
+                            <FormControl 
+                                fullWidth
+                                error={!isUndefined(state.errors.title)}
+                            >
+                                <FormLabel required>
+                                    <FormattedMessage id="globals.ISBN" />
+                                </FormLabel>
+                                <OutlinedInput
+                                    {...actions.register("ISBN", { required: "ISBN is required" })}
+                                    placeholder={formatMessage({ id: "globals.placeholders.textInput" }, { fieldName: formatMessage({ id: "globals.ISBN" }) })}
+                                />
+                                <FormHelperText
+                                    hidden={isUndefined(state.errors.author)}
+                                >
+                                    {state.errors.author?.message}
+                                </FormHelperText>
+                            </FormControl>
+                    </Grid>
                     <Grid container item direction="column" xs={12} md={12} style={{ marginBottom: "1rem" }}>
                             <FormControl 
                                 fullWidth
@@ -96,6 +107,26 @@ export const BookForm: React.FC<{ onSubmit: onSubmitType; initialData?: BookForm
                     </Grid>
                     
                     
+                    <Grid container item direction="column" xs={12} md={12} style={{ marginBottom: "1rem" }}>
+                            <FormControl 
+                                fullWidth
+                                error={!isUndefined(state.errors.title)}
+                            >
+                                <FormLabel required>
+                                    <FormattedMessage id="globals.pages" />
+                                </FormLabel>
+                                <OutlinedInput
+                                    {...actions.register("pages", { required: "pages is required" })}
+                                    placeholder={formatMessage({ id: "globals.placeholders.textInput" }, { fieldName: formatMessage({ id: "globals.pages" }) })}
+                                />
+                                <FormHelperText
+                                    hidden={isUndefined(state.errors.author)}
+                                >
+                                    {state.errors.author?.message}
+                                </FormHelperText>
+                            </FormControl>
+                    </Grid>
+
                     <Grid container item direction="column" xs={12} md={12} style={{ marginBottom: "1rem" }}>
                             <FormControl 
                                 fullWidth

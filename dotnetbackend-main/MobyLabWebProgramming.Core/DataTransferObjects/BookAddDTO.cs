@@ -9,6 +9,7 @@ namespace MobyLabWebProgramming.Core.DataTransferObjects;
 public class BookAddDTO
 {
     public string Title { get; set; } = default!;
+    public string ISBN { get; set; } = default!;
     public string Author { get; set; } = default!;
     public string Genre { get; set; } = default!;
     public string Description { get; set; } = default!;

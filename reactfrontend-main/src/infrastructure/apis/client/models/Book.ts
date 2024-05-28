@@ -73,6 +73,12 @@ export interface Book {
      * @type {string}
      * @memberof Book
      */
+    isbn?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof Book
+     */
     description?: string | null;
     /**
      * 
@@ -141,6 +147,7 @@ export function BookFromJSONTyped(json: any, ignoreDiscriminator: boolean): Book
         'createdAt': !exists(json, 'createdAt') ? undefined : (new Date(json['createdAt'])),
         'updatedAt': !exists(json, 'updatedAt') ? undefined : (new Date(json['updatedAt'])),
         'title': !exists(json, 'title') ? undefined : json['title'],
+        'isbn': !exists(json, 'isbn') ? undefined : json['isbn'],
         'description': !exists(json, 'description') ? undefined : json['description'],
         'pages': !exists(json, 'pages') ? undefined : json['pages'],
         'authorId': !exists(json, 'authorId') ? undefined : json['authorId'],
@@ -165,6 +172,7 @@ export function BookToJSON(value?: Book | null): any {
         'createdAt': value.createdAt === undefined ? undefined : (value.createdAt.toISOString()),
         'updatedAt': value.updatedAt === undefined ? undefined : (value.updatedAt.toISOString()),
         'title': value.title,
+        'isbn': value.isbn,
         'description': value.description,
         'pages': value.pages,
         'authorId': value.authorId,

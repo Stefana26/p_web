@@ -10,6 +10,7 @@ public class Author : BaseEntity
 {
     public string Name { get; set; } = default!;
     public string? Nationality { get; set; } = default!;
+    public string? DateOfBirth { get; set; } = default!;
     public string? Biography { get; set; } = default!;
 
     // one-to-many relation between author and book

@@ -21,6 +21,8 @@ public class AuthorConfiguration : IEntityTypeConfiguration<Author>
             .IsRequired();
         builder.Property(e => e.Nationality)
             .HasMaxLength(255);
+        builder.Property(e => e.DateOfBirth)
+            .HasMaxLength(255);
         builder.Property(e => e.Biography)
             .HasMaxLength(4095);
         builder.Property(e => e.CreatedAt)

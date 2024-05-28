@@ -18,12 +18,14 @@ import { toast } from "react-toastify";
  * Use a function to return the default values of the form and the validation schema.
  * You can add other values as the default, for example when populating the form with data to update an entity in the backend.
  */
-const getDefaultValues = (initialData?: { email: string }) => {
+const getDefaultValues = (initialData?: { title: string }) => {
     const defaultValues = {
         title: "",
+        ISBN: "",
         author: "",
         genre: "",
-        description: ""
+        description: "",
+        pages: 0
     };
 
     if (!isUndefined(initialData)) {
@@ -51,6 +53,13 @@ const useInitBookForm = () => {
                     fieldName: formatMessage({ id: "globals.title" }),
                 }))
             .default(defaultValues.title),
+        ISBN: yup.string()
+        .required(formatMessage(
+            { id: "globals.validations.requiredField" },
+            {
+                fieldName: formatMessage({ id: "globals.ISBN" }),
+            }))
+        .default(defaultValues.ISBN),
         author: yup.string() // This field should be a string.
             .required(formatMessage( // Use formatMessage to get the translated error message.
                 { id: "globals.validations.requiredField" },
@@ -59,7 +68,6 @@ const useInitBookForm = () => {
                         id: "globals.author",
                     }),
                 })) // The field is required and needs a error message when it is empty.
-            .email() // This requires the field to have a email format.
             .default(defaultValues.author), // Add a default value for the field.
         genre: yup.string()
             .required(formatMessage(
@@ -78,7 +86,16 @@ const useInitBookForm = () => {
                         id: "globals.description",
                     }),
                 }))
-            .default(defaultValues.description)
+            .default(defaultValues.description),
+        pages: yup.number()
+        .required(formatMessage(
+            { id: "globals.validations.requiredField" },
+            {
+                fieldName: formatMessage({
+                    id: "globals.pages",
+                }),
+            }))
+        .default(defaultValues.pages)
     });
 
     const resolver = yupResolver(schema); // Get the resolver.
@@ -95,7 +112,6 @@ export const useBookFormController = (onSubmit?: () => void, initialData?: BookF
 
     const { addBook: { mutation: addMutation, key: addMutationKey }, updateBook: { mutation: updateMutation, key: updateMutationKey } } = useBookApi();
     const queryClient = useQueryClient();
-
     const { mutateAsync: add, status: addStatus } = useMutation({
         mutationKey: [addMutationKey],
         mutationFn: addMutation,
@@ -104,6 +120,7 @@ export const useBookFormController = (onSubmit?: () => void, initialData?: BookF
             toast.success('Book registered successfully');
         },
         onError: (error) => {
+            console.log(error);
             toast.error(`Registration failed: ${error.message}`);
         }
     });

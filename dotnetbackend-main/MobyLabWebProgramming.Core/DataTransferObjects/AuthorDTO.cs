@@ -15,6 +15,9 @@ public class AuthorDTO
     [System.Text.Json.Serialization.JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? Nationality { get; set; } = default!;
     [System.Text.Json.Serialization.JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? DateOfBirth { get; set; } = default!;
+
+    [System.Text.Json.Serialization.JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? Biography { get; set; }
     public ICollection<BookDTO>? Books { get; set; } = new List<BookDTO>();
     //  public string? ImageUrl { get; set; }

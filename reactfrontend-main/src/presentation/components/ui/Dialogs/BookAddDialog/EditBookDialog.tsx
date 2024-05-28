@@ -7,8 +7,6 @@ import { useIntl } from "react-intl";
 import { useDialogController } from '../Dialog.controller';
 import EditIcon from '@mui/icons-material/Edit';
 const EditBookDialog: React.FC<{ initialData: BookDTO }> = ({ initialData }) => {
-    console.log('ce naiba');
-   
     const { close, isOpen, open } = useDialogController(); // Destructure open, close, and isOpen from the controller
     console.log(isOpen);
     return (

@@ -10,9 +10,11 @@ import { SelectChangeEvent } from "@mui/material";
 
 export type BookFormModel = {
     title: string;
+    ISBN: string;
     author: string;
     genre: string;
     description: string;
+    pages: number;
 };
 
 export type BookFormState = {

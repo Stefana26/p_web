@@ -9,6 +9,7 @@ namespace MobyLabWebProgramming.Core.Entities
     public class Book : BaseEntity
     {
         public string Title { get; set; } = default!;
+        public string? ISBN { get; set; } = default!;
         public string Description { get; set; } = default!;
         public int Pages { get; set; }
 

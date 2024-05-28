@@ -30,6 +30,12 @@ export interface BookAddDTO {
      * @type {string}
      * @memberof BookAddDTO
      */
+    isbn?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof BookAddDTO
+     */
     author?: string | null;
     /**
      * 
@@ -71,6 +77,7 @@ export function BookAddDTOFromJSONTyped(json: any, ignoreDiscriminator: boolean)
     return {
         
         'title': !exists(json, 'title') ? undefined : json['title'],
+        'isbn': !exists(json, 'isbn') ? undefined : json['isbn'],
         'author': !exists(json, 'author') ? undefined : json['author'],
         'genre': !exists(json, 'genre') ? undefined : json['genre'],
         'description': !exists(json, 'description') ? undefined : json['description'],
@@ -88,6 +95,7 @@ export function BookAddDTOToJSON(value?: BookAddDTO | null): any {
     return {
         
         'title': value.title,
+        'isbn': value.isbn,
         'author': value.author,
         'genre': value.genre,
         'description': value.description,

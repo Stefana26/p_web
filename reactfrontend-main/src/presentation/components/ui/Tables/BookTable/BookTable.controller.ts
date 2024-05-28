@@ -4,6 +4,7 @@ import { BookUpdateDTO } from "@infrastructure/apis/client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCallback } from "react";
 import { usePaginationController } from "../Pagination.controller";
+import { toast } from "react-toastify";
 
 /**
  * This is controller hook manages the table state including the pagination and data retrieval from the backend.
@@ -20,10 +21,22 @@ export const useBookTableController = () => {
         mutationKey: [deleteBookKey],
         mutationFn: deleteBook
     }); // Use a mutation to remove an entry.
+    // const remove = useCallback(
+    //     (id: string) => deleteMutation(id).then(() => queryClient.invalidateQueries({ queryKey: [queryKey] })),
+    //     [queryClient, deleteMutation, queryKey]); // Create the callback to remove an entry.
     const remove = useCallback(
-        (id: string) => deleteMutation(id).then(() => queryClient.invalidateQueries({ queryKey: [queryKey] })),
-        [queryClient, deleteMutation, queryKey]); // Create the callback to remove an entry.
-    
+        (id: string) => {
+            deleteMutation(id)
+                .then(() => {
+                    queryClient.invalidateQueries({ queryKey: [queryKey] });
+                    toast.success('book deleted successfully');
+                })
+                .catch((error) => {
+                    toast.error(`Failed to delete book: ${error.message}`);
+                });
+        },
+        [queryClient, deleteMutation, queryKey]
+    );
     const { mutateAsync: updateMutation } = useMutation({
         mutationKey: [updateBookKey],
         mutationFn: updateBook

@@ -9,7 +9,7 @@ import { useUserApi } from "@infrastructure/apis/api-management";
 import { useCallback } from "react";
 import { UserRoleEnum } from "@infrastructure/apis/client";
 import { SelectChangeEvent } from "@mui/material";
-
+import { useLoginApi } from "@infrastructure/apis/api-management";
 /**
  * Use a function to return the default values of the form and the validation schema.
  * You can add other values as the default, for example when populating the form with data to update an entity in the backend.
@@ -19,6 +19,7 @@ const getDefaultValues = (initialData?: UserAddFormModel) => {
         email: "",
         name: "",
         password: "",
+        confirmPassword: "",
         role: "" as UserRoleEnum
     };
 
@@ -67,6 +68,7 @@ const useInitUserAddForm = () => {
                         id: "globals.password",
                     }),
                 })),
+        confirmPassword: yup.string().oneOf([yup.ref('password')], formatMessage({ id: "globals.validation.passwordsMustMatch" })).required(formatMessage({ id: "globals.validation.required" })),
         role: yup.string()
             .oneOf([ // The select input should have one of these values.
                 UserRoleEnum.Admin,
@@ -98,16 +100,33 @@ export const useUserAddFormController = (onSubmit?: () => void): UserAddFormCont
         mutationKey: [mutationKey], 
         mutationFn: mutation
     });
+    const { loginMutation: { mutation: login } } = useLoginApi();
+    
+    const { mutateAsync: loginUser } = useMutation({
+        mutationFn: login
+    });
     const queryClient = useQueryClient();
+    // const submit = useCallback((data: UserAddFormModel) => // Create a submit callback to send the form data to the backend.
+    //     add(data).then(() => {
+    //         queryClient.invalidateQueries({ queryKey: [queryKey] }); // If the form submission succeeds then some other queries need to be refresh so invalidate them to do a refresh.
+
+    //         if (onSubmit) {
+    //             onSubmit();
+    //         }
+    //     }), [add, queryClient, queryKey]);
+
     const submit = useCallback((data: UserAddFormModel) => // Create a submit callback to send the form data to the backend.
         add(data).then(() => {
             queryClient.invalidateQueries({ queryKey: [queryKey] }); // If the form submission succeeds then some other queries need to be refresh so invalidate them to do a refresh.
 
+            // Attempt to log in the user after successful registration
+            return loginUser({ email: data.email, password: data.password });
+        }).then(() => {
             if (onSubmit) {
                 onSubmit();
             }
-        }), [add, queryClient, queryKey]);
-
+        }), [add, queryClient, queryKey, loginUser, onSubmit]);
+        
     const {
         register,
         handleSubmit,

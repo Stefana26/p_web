@@ -13,6 +13,7 @@ export type UserAddFormModel = {
     name: string;
     email: string;
     password: string;
+    confirmPassword: string;
     role: UserRoleEnum;
 };
 

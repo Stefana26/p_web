@@ -59,18 +59,15 @@ public class AuthorService : IAuthorService
         {
             Name = author.Name,
             Nationality = author.Nationality ?? null,
+            DateOfBirth = author.DateOfBirth ?? null,
             Biography = author.Biography ?? null,
         }, cancellationToken); // A new entity is created and persisted in the database.
 
         return ServiceResponse.ForSuccess();
     }
 
-    public async Task<ServiceResponse> UpdateAuthor(AuthorUpdateDTO author, UserDTO? requestingUser, CancellationToken cancellationToken = default)
+    public async Task<ServiceResponse> UpdateAuthor(AuthorUpdateDTO author, CancellationToken cancellationToken = default)
     {
-        if (requestingUser != null && requestingUser.Role != UserRoleEnum.Admin && requestingUser.Role != UserRoleEnum.Personnel)
-        {
-            return ServiceResponse.FromError(new(HttpStatusCode.Forbidden, "Only the admin, the personnel or the own user can update the user!", ErrorCodes.CannotUpdate));
-        }
 
         var entity = await _repository.GetAsync(new AuthorSpec(author.Id), cancellationToken);
 
@@ -78,7 +75,8 @@ public class AuthorService : IAuthorService
         {
             entity.Name = author.Name ?? entity.Name;
             entity.Biography = author.Biography ?? entity.Biography;
-
+            entity.DateOfBirth = author.DateOfBirth ?? entity.DateOfBirth;
+            entity.Nationality = author.Nationality ?? entity.Nationality;
             await _repository.UpdateAsync(entity, cancellationToken); // Update the entity and persist the changes.
         } else
         {

@@ -178,6 +178,7 @@ public static class WebApplicationBuilderExtensions
             .AddTransient<IReviewService, ReviewService>()
             .AddTransient<IRatingService, RatingService>()
             .AddTransient<IAuthorService, AuthorService>()
+            .AddTransient<IFeedbackService, FeedbackService>()
             .AddTransient<IMailService, MailService>();
 
         return builder;

@@ -49,6 +49,12 @@ export interface AuthorDTO {
      * @type {string}
      * @memberof AuthorDTO
      */
+    dateOfBirth?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof AuthorDTO
+     */
     biography?: string | null;
     /**
      * 
@@ -80,6 +86,7 @@ export function AuthorDTOFromJSONTyped(json: any, ignoreDiscriminator: boolean):
         'id': !exists(json, 'id') ? undefined : json['id'],
         'name': !exists(json, 'name') ? undefined : json['name'],
         'nationality': !exists(json, 'nationality') ? undefined : json['nationality'],
+        'dateOfBirth': !exists(json, 'dateOfBirth') ? undefined : json['dateOfBirth'],
         'biography': !exists(json, 'biography') ? undefined : json['biography'],
         'books': !exists(json, 'books') ? undefined : (json['books'] === null ? null : (json['books'] as Array<any>).map(BookDTOFromJSON)),
     };
@@ -97,6 +104,7 @@ export function AuthorDTOToJSON(value?: AuthorDTO | null): any {
         'id': value.id,
         'name': value.name,
         'nationality': value.nationality,
+        'dateOfBirth': value.dateOfBirth,
         'biography': value.biography,
         'books': value.books === undefined ? undefined : (value.books === null ? null : (value.books as Array<any>).map(BookDTOToJSON)),
     };

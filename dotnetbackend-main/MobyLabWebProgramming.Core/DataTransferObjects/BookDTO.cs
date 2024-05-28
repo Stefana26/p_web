@@ -13,6 +13,7 @@ public class BookDTO
 {
     public Guid Id { get; set; }
     public string Title { get; set; } = default!;
+    public string ISBN { get; set; } = default!;
     [System.Text.Json.Serialization.JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public AuthorAddDTO Author { get; set; } = default!;
     [System.Text.Json.Serialization.JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]

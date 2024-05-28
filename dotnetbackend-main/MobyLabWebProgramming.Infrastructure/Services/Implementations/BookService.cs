@@ -73,7 +73,7 @@ public class BookService : IBookService
             {
                 Name = book.Author
             };
-            var authorResult = await _authorService.AddAuthor(authorName, requestingUser);
+            var authorResult = await _authorService.AddAuthor(authorName);
 
             author = await _repository.GetAsync(new AuthorSpec(book.Author), cancellationToken);
         }
@@ -94,6 +94,7 @@ public class BookService : IBookService
         await _repository.AddAsync(new Book
         {
             Title = book.Title,
+            ISBN = book.ISBN,
             Description = book.Description,
             Pages = book.Pages,
             Author = author,
@@ -128,7 +129,7 @@ public class BookService : IBookService
                 {
                     Name = book.Author
                 };
-                var authorResult = await _authorService.AddAuthor(authorName, requestingUser);
+                var authorResult = await _authorService.AddAuthor(authorName);
 
                 author = await _repository.GetAsync(new AuthorSpec(book.Author), cancellationToken);
                 entity.AuthorId = author.Id;

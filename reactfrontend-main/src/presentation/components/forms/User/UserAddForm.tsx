@@ -107,6 +107,32 @@ export const UserAddForm = (props: { onSubmit?: () => void }) => {
                         </FormControl>
                     </Grid>
                     <Grid container item direction="column" xs={6} md={6}>
+                            <FormControl
+                                fullWidth
+                                error={!isUndefined(state.errors.confirmPassword)}
+                            >
+                                <FormLabel required>
+                                    <FormattedMessage id="globals.confirmPassword" />
+                                </FormLabel>
+                                <OutlinedInput
+                                    type="password"
+                                    {...actions.register("confirmPassword")}
+                                    placeholder={formatMessage(
+                                        { id: "globals.placeholders.textInput" },
+                                        {
+                                            fieldName: formatMessage({
+                                                id: "globals.confirmPassword",
+                                            }),
+                                        }
+                                    )}
+                                    autoComplete="none"
+                                />
+                                <FormHelperText hidden={isUndefined(state.errors.confirmPassword)}>
+                                    {state.errors.confirmPassword?.message}
+                                </FormHelperText>
+                            </FormControl>
+                        </Grid>
+                    <Grid container item direction="column" xs={6} md={6}>
                         <FormControl
                             fullWidth
                             error={!isUndefined(state.errors.role)}

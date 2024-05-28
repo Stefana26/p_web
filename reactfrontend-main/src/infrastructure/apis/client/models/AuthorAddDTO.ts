@@ -36,6 +36,12 @@ export interface AuthorAddDTO {
      * @type {string}
      * @memberof AuthorAddDTO
      */
+    dateOfBirth?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof AuthorAddDTO
+     */
     biography?: string | null;
 }
 
@@ -60,6 +66,7 @@ export function AuthorAddDTOFromJSONTyped(json: any, ignoreDiscriminator: boolea
         
         'name': !exists(json, 'name') ? undefined : json['name'],
         'nationality': !exists(json, 'nationality') ? undefined : json['nationality'],
+        'dateOfBirth': !exists(json, 'dateOfBirth') ? undefined : json['dateOfBirth'],
         'biography': !exists(json, 'biography') ? undefined : json['biography'],
     };
 }
@@ -75,6 +82,7 @@ export function AuthorAddDTOToJSON(value?: AuthorAddDTO | null): any {
         
         'name': value.name,
         'nationality': value.nationality,
+        'dateOfBirth': value.dateOfBirth,
         'biography': value.biography,
     };
 }

@@ -14,6 +14,7 @@ public class BookConfiguration : IEntityTypeConfiguration<Book>
         builder.Property(e => e.Title)
             .HasMaxLength(255) // This specifies the maximum length for varchar type in the database.
             .IsRequired();
+        builder.Property(e => e.ISBN);
         builder.Property(e => e.Description)
             .HasMaxLength(4095)
             .IsRequired();

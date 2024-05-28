@@ -61,6 +61,12 @@ export interface Author {
      * @type {string}
      * @memberof Author
      */
+    dateOfBirth?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof Author
+     */
     biography?: string | null;
     /**
      * 
@@ -94,6 +100,7 @@ export function AuthorFromJSONTyped(json: any, ignoreDiscriminator: boolean): Au
         'updatedAt': !exists(json, 'updatedAt') ? undefined : (new Date(json['updatedAt'])),
         'name': !exists(json, 'name') ? undefined : json['name'],
         'nationality': !exists(json, 'nationality') ? undefined : json['nationality'],
+        'dateOfBirth': !exists(json, 'dateOfBirth') ? undefined : json['dateOfBirth'],
         'biography': !exists(json, 'biography') ? undefined : json['biography'],
         'books': !exists(json, 'books') ? undefined : (json['books'] === null ? null : (json['books'] as Array<any>).map(BookFromJSON)),
     };
@@ -113,6 +120,7 @@ export function AuthorToJSON(value?: Author | null): any {
         'updatedAt': value.updatedAt === undefined ? undefined : (value.updatedAt.toISOString()),
         'name': value.name,
         'nationality': value.nationality,
+        'dateOfBirth': value.dateOfBirth,
         'biography': value.biography,
         'books': value.books === undefined ? undefined : (value.books === null ? null : (value.books as Array<any>).map(BookToJSON)),
     };

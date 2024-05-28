@@ -42,6 +42,12 @@ export interface AuthorUpdateDTO {
      * @type {string}
      * @memberof AuthorUpdateDTO
      */
+    dateOfBirth?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof AuthorUpdateDTO
+     */
     biography?: string | null;
 }
 
@@ -67,6 +73,7 @@ export function AuthorUpdateDTOFromJSONTyped(json: any, ignoreDiscriminator: boo
         'id': !exists(json, 'id') ? undefined : json['id'],
         'name': !exists(json, 'name') ? undefined : json['name'],
         'nationality': !exists(json, 'nationality') ? undefined : json['nationality'],
+        'dateOfBirth': !exists(json, 'dateOfBirth') ? undefined : json['dateOfBirth'],
         'biography': !exists(json, 'biography') ? undefined : json['biography'],
     };
 }
@@ -83,6 +90,7 @@ export function AuthorUpdateDTOToJSON(value?: AuthorUpdateDTO | null): any {
         'id': value.id,
         'name': value.name,
         'nationality': value.nationality,
+        'dateOfBirth': value.dateOfBirth,
         'biography': value.biography,
     };
 }

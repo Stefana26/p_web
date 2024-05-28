@@ -16,6 +16,7 @@ export * from './BookDTORequestResponse';
 export * from './BookUpdateDTO';
 export * from './ErrorCodes';
 export * from './ErrorMessage';
+export * from './FeedbackAddDTO';
 export * from './Genre';
 export * from './GenreAddDTO';
 export * from './GenreDTO';

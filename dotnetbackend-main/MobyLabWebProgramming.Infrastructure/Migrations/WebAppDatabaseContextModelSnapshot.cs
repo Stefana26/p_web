@@ -36,6 +36,10 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp without time zone");
 
+                    b.Property<string>("DateOfBirth")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -73,6 +77,9 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                     b.Property<Guid>("GenreId")
                         .HasColumnType("uuid");
 
+                    b.Property<string>("ISBN")
+                        .HasColumnType("text");
+
                     b.Property<int>("Pages")
                         .HasColumnType("integer");
 
@@ -91,6 +98,43 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                     b.HasIndex("GenreId");
 
                     b.ToTable("Book");
+                });
+
+            modelBuilder.Entity("MobyLabWebProgramming.Core.Entities.Feedback", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Q1")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("Q2")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("Q3")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("Q4")
+                        .IsRequired()
+                        .HasMaxLength(4095)
+                        .HasColumnType("character varying(4095)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Feedback");
                 });
 
             modelBuilder.Entity("MobyLabWebProgramming.Core.Entities.Genre", b =>
